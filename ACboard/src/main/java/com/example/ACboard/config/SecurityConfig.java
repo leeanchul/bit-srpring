@@ -42,9 +42,8 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtAuthFilter(userDetailsService,jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .formLogin(login->
                         login
-                                .loginPage("/user/login")
-                                .loginProcessingUrl("/user/login2")
-                                .defaultSuccessUrl("/",true)
+                                .loginPage("/user/loginpage")
+                                .loginProcessingUrl("/user/login")
                                 .permitAll()
                         )
         ;

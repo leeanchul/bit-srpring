@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,9 +20,19 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private UserDetailsServiceImpl userDetailsService;
     private JwtProvider provider;
+    private HttpSession session;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request
+            , HttpServletResponse response
+            , FilterChain filterChain) throws ServletException, IOException, ServletException, IOException {
+
+//        if(session.getAttribute("test") != null){
+//            String token= (String) session.getAttribute("test");
+//
+//            SecurityContextHolder.getContext().setAuthentication(token);
+//        }
+
         String header=request.getHeader("Authorization");
 
         if(header != null){
@@ -38,6 +49,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken token
                             = new UsernamePasswordAuthenticationToken(userDTO,"",userDTO.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(token);
+                    System.out.println(token);
                 }
 
             }
