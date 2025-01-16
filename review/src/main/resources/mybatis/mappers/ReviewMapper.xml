@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.ReviewMapper">
+
+    <insert id="insert" parameterType="reviewDTO">
+        INSERT INTO review(user_id, movie_id, content)
+        VAlUES(#{userId}, #{movieId} , #{content})
+    </insert>
+
+    <select id="reviewAll" parameterType="int" resultType="reviewDTO">
+        SELECT * FROM review
+        INNER JOIN user
+        ON review.user_id=user.id
+        WHERE movie_id=#{movieId}
+        ORDER BY review.id DESC
+    </select>
+
+    <select id="validateUserid" parameterType="reviewDTO" resultType="reviewDTO">
+        SELECT * FROM review
+        WHERE user_id=#{userId} AND movie_id=#{movieId}
+    </select>
+
+    <select id="reviewOne" parameterType="int" resultType="reviewDTO">
+        SELECT * FROM review
+        WHERE id=#{id}
+    </select>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM review
+        WHERE id=#{id}
+    </delete>
+</mapper>

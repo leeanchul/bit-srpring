@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: restful-api
+
+  #Database
+  datasource:
+    url: jdbc:mysql://localhost:3306/board
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      # Maximum Size for SUm of the uploaded files size
+      max-request-size: 100MB
+  #JSP
+
+server:
+  servlet:
+    jsp:
+      init-parameters:
+        development: true
+  port: 8081
+  #Mybatis
+mybatis:
+  #mapper-locations: classpath:/mybatis/mappers/*.xml
+  #config-location: classpath:/mybatis/config.xml
+
+  #File upload
+  # Maximum File size for a single file
+
+
+upload:
+  path: c:/upload/

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.UserMapper">
+    <select id="selectByUsername" parameterType="string" resultType="userDTO">
+        SELECT * FROM user
+        WHERE username=#{username}
+    </select>
+    <select id="validateUsername" parameterType="string" resultType="userDTO">
+        SELECT * FROM user
+        WHERE username=#{username}
+    </select>
+    <select id="validateNickname" parameterType="string" resultType="userDTO">
+        SELECT * FROM user
+        WHERE nickname=#{nickname}
+    </select>
+    <insert id="insert" parameterType="userDTO">
+        INSERT INTO user(username, password, nickname)
+        VALUES(#{username}, #{password}, #{nickname})
+    </insert>
+</mapper>

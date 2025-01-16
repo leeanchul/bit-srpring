@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- DB에 표기법과 JAVA에 표기법이 다르기 때문에 설정해줘야한다. -->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias type="com.bit.security.model.UserDTO" alias="userDTO"/>
+        <typeAlias type="com.bit.security.model.FileDTO" alias="fileDTO"/>
+
+    </typeAliases>
+
+</configuration>
