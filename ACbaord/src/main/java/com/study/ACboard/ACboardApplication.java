@@ -1,4 +1,4 @@
-package com.bit.board_backend;
+package com.study.ACboard;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -14,10 +14,10 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import javax.sql.DataSource;
 
 @SpringBootApplication
-public class BoardBackendApplication {
+public class ACboardApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BoardBackendApplication.class, args);
+		SpringApplication.run(ACboardApplication.class, args);
 	}
 
 	@Bean // Spring 한테 특정 클래스 객체의 생성/ 소멸을 맡긴다.
