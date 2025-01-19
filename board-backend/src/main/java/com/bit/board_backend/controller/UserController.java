@@ -2,11 +2,9 @@ package com.bit.board_backend.controller;
 
 import com.bit.board_backend.model.UserDTO;
 import com.bit.board_backend.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +12,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/user/")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:8081")
 // 생성자 주입
 public class UserController {
     private final UserService USER_SERVICE;
-    private final UserService userService;
 
     // 로그인 요청에 대한 결과 처리
     @PostMapping("auth")
@@ -26,9 +24,10 @@ public class UserController {
         UserDTO result = USER_SERVICE.auth(userDTO);
 
         if(result != null){
-            resultMap.put("result","성공 !");
+            resultMap.put("result","success!");
+            resultMap.put("login",userDTO);
         } else{
-            resultMap.put("result","실패");
+            resultMap.put("result","fail");
             resultMap.put("message","확인좀해라~");
         }
 
@@ -39,14 +38,32 @@ public class UserController {
     public Object register(@RequestBody UserDTO userDTO){
         Map<String,Object> resultMap=new HashMap<>();
 
-        if(!userService.validateUsername(userDTO)){
+        if(!USER_SERVICE.validateUsername(userDTO)){
             resultMap.put("result","fail");
-            resultMap.put("message","Duplicated Username");
-        } else if(!userService.validateNickname(userDTO)){
+            resultMap.put("message","중복된 아이디는 사용할 수 없습니다.");
+        } else if(!USER_SERVICE.validateNickname(userDTO)){
             resultMap.put("result","fail");
-            resultMap.put("message","Duplicated Nickname");
+            resultMap.put("message","중복된 닉네임은 사용할 수 없습니다.");
         } else{
+            USER_SERVICE.register(userDTO);
             resultMap.put("result","가입 완료!!");
+        }
+
+        return resultMap;
+    }
+
+    @PostMapping("userInfo")
+    public Object userInfo(@RequestBody UserDTO userDTO){
+        Map<String,Object> resultMap=new HashMap<>();
+        System.out.println("api"+userDTO.getUsername());
+        int id=USER_SERVICE.selectById(userDTO.getUsername());
+
+        if(id != 0){
+            resultMap.put("result","success!");
+            resultMap.put("id",id);
+        } else{
+            resultMap.put("result","fail");
+            resultMap.put("message","정보 업음");
         }
 
         return resultMap;

@@ -10,6 +10,8 @@
     
     <typeAliases>
         <typeAlias type="com.bit.board_backend.model.UserDTO" alias="userDTO"/>
+        <typeAlias type="com.bit.board_backend.model.BoardDTO" alias="boardDTO"/>
+        <typeAlias type="com.bit.board_backend.model.ReplyDTO" alias="replyDTO"/>
     </typeAliases>
 
 </configuration>
