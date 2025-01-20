@@ -5,6 +5,7 @@ import com.bit.board_backend.service.BoardService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import java.util.Map;
 @CrossOrigin("http://localhost:8081")
 public class BoardController {
     private final BoardService BOARD_SERVICE;
+    private final String LIST_FORMAATTER= "yy-MM-dd HH:mm:ss";
+    private final String InDIV_FORMATTER="yyyy년 MM월 dd일 HH시 mm분 ss초";
 
     @GetMapping("showAll/{page}")
     public Object showAll(@PathVariable String page) {
@@ -39,6 +42,15 @@ public class BoardController {
             resultMap.put("message", " 유효하지않은 페이지");
         } else {
             resultMap.put("result", "success");
+
+            SimpleDateFormat formatter=new SimpleDateFormat();
+
+            for(BoardDTO b:list){
+                b.setFormattedEntryDate(formatter.format(b.getEntryDate()));
+                b.setFormattedModifyDate(formatter.format(b.getModifyDate()));
+            }
+
+
             resultMap.put("list", list);
 
 
@@ -74,6 +86,11 @@ public class BoardController {
             resultMap.put("message", "올바르지 않은 글 번호입니다.");
         } else {
             resultMap.put("result", "success");
+
+            SimpleDateFormat sdf=new SimpleDateFormat(InDIV_FORMATTER);
+            boardDTO.setFormattedEntryDate(sdf.format(boardDTO.getEntryDate()));
+            boardDTO.setFormattedModifyDate(sdf.format(boardDTO.getModifyDate()));
+
             resultMap.put("boardDTO", boardDTO);
         }
 

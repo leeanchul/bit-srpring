@@ -2,9 +2,7 @@ $().ready(()=>{
 
     let currentUrl=window.location.href
     let pageNo=currentUrl.substring(currentUrl.lastIndexOf('/')+1)
-    console.log(pageNo)
 
-    console.log(currentUrl)
     $.ajax({
         url:'http://localhost:8080/api/board/showAll/'+pageNo,
         success:(resp)=>{
@@ -12,6 +10,7 @@ $().ready(()=>{
                 addRow(item)
             })
             addPaginationRow(resp)
+            console.log(resp)
         }
     })
 })
@@ -25,9 +24,9 @@ function addRow(data){
     let nicknameTd=document.createElement('td')
     $(nicknameTd).text(data.nickname)
     let entryDateTd=document.createElement('td')
-    $(entryDateTd).text(data.entryDate)
+    $(entryDateTd).text(data.formattedEntryDate)
     let modifyDateTd=document.createElement('td')
-    $(modifyDateTd).text(data.modifyDate)
+    $(modifyDateTd).text(data.formattedModifyDate)
 
     tr.append(idTd)
     tr.append(titleTd)

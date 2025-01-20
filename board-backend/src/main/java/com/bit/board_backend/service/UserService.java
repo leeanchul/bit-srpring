@@ -27,8 +27,4 @@ public class UserService {
         sqlSession.insert(NAMESPACE+".register",userDTO);
     }
 
-    // 회원 아이디 가져오기
-    public int selectById(String username){
-        return sqlSession.selectOne(NAMESPACE+".selectById",username);
-    }
 }

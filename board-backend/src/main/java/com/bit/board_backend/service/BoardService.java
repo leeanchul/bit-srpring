@@ -21,7 +21,6 @@ public class BoardService {
         paramMap.put("startRow", (page - 1) * SIZE);
         paramMap.put("limitSize", SIZE);
 
-        System.out.println(paramMap);
 
         return sqlSession.selectList(NAMESPACE + ".selectByPage", paramMap);
     }

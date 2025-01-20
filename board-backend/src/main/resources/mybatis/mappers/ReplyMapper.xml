@@ -8,7 +8,7 @@
         INNER JOIN user
         ON reply.writer_id=user.id
         WHERE board_id=#{boardId}
-        ORDER BY reply_id ASC
+        ORDER BY reply.id ASC
     </select>
 
     <insert id="insert" parameterType="replyDTO">

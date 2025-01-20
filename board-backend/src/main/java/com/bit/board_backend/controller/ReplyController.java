@@ -24,7 +24,7 @@ public class ReplyController {
             List<ReplyDTO> list=REPLY_SERVICE.selectAll(boardId);
 
             resultMap.put("result","success");
-            resultMap.put("message",list);
+            resultMap.put("list",list);
         }catch (Exception e){
             resultMap.put("result","fail");
             resultMap.put("message",e.getMessage());

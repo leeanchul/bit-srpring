@@ -25,7 +25,7 @@ public class UserController {
 
         if(result != null){
             resultMap.put("result","success!");
-            resultMap.put("login",userDTO);
+            resultMap.put("login",result);
         } else{
             resultMap.put("result","fail");
             resultMap.put("message","확인좀해라~");
@@ -52,21 +52,5 @@ public class UserController {
         return resultMap;
     }
 
-    @PostMapping("userInfo")
-    public Object userInfo(@RequestBody UserDTO userDTO){
-        Map<String,Object> resultMap=new HashMap<>();
-        System.out.println("api"+userDTO.getUsername());
-        int id=USER_SERVICE.selectById(userDTO.getUsername());
-
-        if(id != 0){
-            resultMap.put("result","success!");
-            resultMap.put("id",id);
-        } else{
-            resultMap.put("result","fail");
-            resultMap.put("message","정보 업음");
-        }
-
-        return resultMap;
-    }
 
 }
