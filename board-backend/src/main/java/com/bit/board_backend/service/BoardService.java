@@ -15,6 +15,16 @@ public class BoardService {
     private final String NAMESPACE = "mappers.BoardMapper";
     private final int SIZE = 15;
 
+
+    // 전체 글 불러오기
+    public List<BoardDTO> selectAll(){
+        return sqlSession.selectList(NAMESPACE+".selectAll");
+    }
+    // 전체 글 갯수 불러오기
+    public int countAll(){
+        return sqlSession.selectOne(NAMESPACE+".selectMaxPage");
+    }
+
     // 페이지에 따른 글 목록 불러오기
     public List<BoardDTO> selectByPage(int page) {
         HashMap<String, Integer> paramMap = new HashMap<>();

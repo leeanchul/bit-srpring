@@ -43,4 +43,12 @@
         DELETE FROM board
         WHERE id=#{id}
     </delete>
+
+    <select id="selectAll" resultType="boardDTO">
+        SELECT * FROM board
+        INNER JOIN user
+        ON board.writer_id=user.id
+        ORDER BY board.id DESC
+
+    </select>
 </mapper>

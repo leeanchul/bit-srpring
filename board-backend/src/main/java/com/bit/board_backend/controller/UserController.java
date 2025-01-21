@@ -12,7 +12,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/user/")
 @AllArgsConstructor
-@CrossOrigin("http://localhost:8081")
+@CrossOrigin("http://localhost:1841")
+
 // 생성자 주입
 public class UserController {
     private final UserService USER_SERVICE;

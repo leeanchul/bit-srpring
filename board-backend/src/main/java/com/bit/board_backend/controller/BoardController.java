@@ -13,11 +13,21 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/board/")
-@CrossOrigin("http://localhost:8081")
+@CrossOrigin("http://localhost:1841")
 public class BoardController {
     private final BoardService BOARD_SERVICE;
     private final String LIST_FORMAATTER= "yy-MM-dd HH:mm:ss";
     private final String InDIV_FORMATTER="yyyy년 MM월 dd일 HH시 mm분 ss초";
+
+    @GetMapping("showAll")
+    public Object showAll(){
+        Map<String,Object> resultMap=new HashMap<>();
+        resultMap.put("list",BOARD_SERVICE.selectAll());
+        resultMap.put("total",BOARD_SERVICE.countAll());
+
+        return resultMap;
+    }
+
 
     @GetMapping("showAll/{page}")
     public Object showAll(@PathVariable String page) {
