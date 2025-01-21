@@ -16,13 +16,13 @@ Ext.define('extJSTutorial.view.board.BoardDetail',{
             {
                 xtype:'panel',
                 html:`
-                <h1>제목: ${data.title}</h1>
+               <h1 id="test">제목: <span id="title">${data.title}</span></h1>
                 <h3>작성자: ${data.nickname}</h3>
                 <h3>작성일:${data.entryDate}</h3>
                 <h3>수정일:${data.modifyDate}</h3>
                 <hr>
                 <h3>내용</h3>
-                <h1>${data.content}</h1>
+                <h1> <span id="content">${data.content}</span></h1>
                 `
             },
             {
@@ -54,15 +54,75 @@ Ext.define('extJSTutorial.view.board.BoardDetail',{
                     {
                         xtype:'button',
                         text:'수정',
-                        handler:()=>{
-                            console.log('수정 클릭')
+                        handler:(button)=>{
+                            let login=JSON.parse(sessionStorage.getItem("login"))
+                            if(login.id === data.writerId){
+
+                                // html 에 id 값을 가져오기
+                                let title = Ext.get('title');
+                                let content= Ext.get('content')
+                                // title과 content가 Ext.Element 객체인지 확인하고 destroy() 호출
+
+                                // input 으로 바꾸기
+                                title.update(`<input type="text" id="inputTitle" value="${title.dom.innerText}">`)
+                                content.update(`<input type="text" id="inputContent" value="${content.dom.innerText}">`)
+                                
+                                button.setText("저장하기")
+                                button.setHandler((button,title)=>{
+                                    console.log(title)
+                                    let boardDTO={
+                                        title:Ext.get('inputTitle').dom.value,
+                                        content:Ext.get('inputContent').dom.value,
+                                        id:data.id
+                                    }
+                                    Ext.Ajax.request({
+                                        url:`http://localhost:8080/api/board/update`,
+                                        method:'POST',
+                                        jsonData:boardDTO,
+                                        success:(resp)=>{
+                                            console.log(resp)
+                                            Ext.Viewport.removeAll()
+                                            Ext.Viewport.add({
+                                                xtype:'mainview'
+                                            })
+                                        }
+                                    })
+                                })
+
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    text:'본인이 작성한 게시글이 아닙니다.',
+                                    confirmButtonText: '확인'
+                                })
+                            }
                         }
                     },
                     {
                         xtype:'button',
                         text:'삭제',
                         handler:()=>{
-                            console.log('삭제 클릭')
+                            let login=JSON.parse(sessionStorage.getItem("login"))
+                            if(login.id === data.writerId){
+                                Ext.Ajax.request({
+                                    url:`http://localhost:8080/api/board/delete/${data.id}`,
+                                    method:'GET',
+                                    success:(resp)=>{
+                                        console.log(resp)
+                                        Ext.Viewport.removeAll()
+                                        Ext.Viewport.add({
+                                            xtype:'mainview'
+                                        })
+                                    }
+                                })
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    text:'본인이 작성한 게시글이 아닙니다.',
+                                    confirmButtonText: '확인'
+                                })
+                            }
+
                         }
                     }
                 ]

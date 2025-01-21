@@ -122,7 +122,7 @@ Ext.define('extJSTutorial.view.board.BoardList', {
         // text는 해당 컬럼의 제목, dateIndex는 위의 data에서 어떤 것과 연결 시킬지, flex 해당 컬럼의 길이를 상대적으로 정한다.
         {text: '글 번호', dataIndex: 'id', flex: 1},
         {text: '제목', dataIndex: 'title', flex: 4},
-        {text: '작성자', dataIndex: 'writerId', flex: 1},
+        {text: '작성자', dataIndex: 'nickname', flex: 1},
         {text: '작성일', dataIndex: 'entryDate', flex: 1},
         {text: '수정일', dataIndex: 'modifyDate', flex: 1},
 

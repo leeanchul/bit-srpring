@@ -21,7 +21,6 @@ Ext.define('extJSTutorial.view.login.Login',{
                 let form= button.up('formpanel')
                 let values=form.getValues()
 
-
                 Ext.Ajax.request({
                     url:'http://localhost:8080/api/user/auth',
                     method:'POST',
@@ -37,10 +36,8 @@ Ext.define('extJSTutorial.view.login.Login',{
                             })
                         }else{
                             Swal.fire({
-                                title: 'Error!',
-                                text: 'Do you want to continue',
                                 icon: 'error',
-                                confirmButtonText: 'Cool'
+                                confirmButtonText: '확인'
                             })
                         }
                     }

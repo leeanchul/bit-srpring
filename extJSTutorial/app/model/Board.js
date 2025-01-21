@@ -8,6 +8,6 @@ Ext.define('extJSTutorial.model.Board',{
         {name:'writerId',type:'int'},
         {name:'nickname',type:'string'},
         {name:'entryDate',type:'string'},
-        {name:'modifyDate',type:'string'}
+        {name:'modifyDate',type:'string'} 
     ]
 })
