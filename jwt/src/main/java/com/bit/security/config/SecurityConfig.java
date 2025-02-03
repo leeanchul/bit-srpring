@@ -43,7 +43,7 @@ public class SecurityConfig {
         // CSRF 인증 비활성화
         security.csrf(CsrfConfigurer::disable);
 
-        // SESSION 기반 인증 비활성화
+        // SESSION 기반 인증 비활성
         security.sessionManagement(session ->
                 session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

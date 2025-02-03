@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/reply/")
 @AllArgsConstructor
-@CrossOrigin("http://localhost:1841")
+@CrossOrigin("http://localhost:3000")
 public class ReplyController {
     private final ReplyService REPLY_SERVICE;
 
@@ -22,7 +22,6 @@ public class ReplyController {
 
         try{
             List<ReplyDTO> list=REPLY_SERVICE.selectAll(boardId);
-
             resultMap.put("result","success");
             resultMap.put("list",list);
         }catch (Exception e){

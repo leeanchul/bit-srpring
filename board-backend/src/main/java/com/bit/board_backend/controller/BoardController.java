@@ -1,8 +1,13 @@
 package com.bit.board_backend.controller;
 
 import com.bit.board_backend.model.BoardDTO;
+import com.bit.board_backend.model.UserDTO;
 import com.bit.board_backend.service.BoardService;
+import com.bit.board_backend.service.UserService;
+import com.bit.board_backend.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -13,17 +18,19 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/board/")
-@CrossOrigin("http://localhost:1841")
+@CrossOrigin("http://localhost:3000")
 public class BoardController {
     private final BoardService BOARD_SERVICE;
-    private final String LIST_FORMAATTER= "yy-MM-dd HH:mm:ss";
-    private final String InDIV_FORMATTER="yyyy년 MM월 dd일 HH시 mm분 ss초";
+    private final String LIST_FORMAATTER = "yy-MM-dd HH:mm:ss";
+    private final String InDIV_FORMATTER = "yyyy년 MM월 dd일 HH시 mm분 ss초";
+    private final JwtUtil JWT_UTIL;
+    private final UserService userService;
 
     @GetMapping("showAll")
-    public Object showAll(){
-        Map<String,Object> resultMap=new HashMap<>();
-        resultMap.put("list",BOARD_SERVICE.selectAll());
-        resultMap.put("total",BOARD_SERVICE.countAll());
+    public Object showAll() {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("list", BOARD_SERVICE.selectAll());
+        resultMap.put("total", BOARD_SERVICE.countAll());
 
         return resultMap;
     }
@@ -32,7 +39,6 @@ public class BoardController {
     @GetMapping("showAll/{page}")
     public Object showAll(@PathVariable String page) {
         Map<String, Object> resultMap = new HashMap<>();
-
 
         int pageNo = 0;
         try {
@@ -53,9 +59,9 @@ public class BoardController {
         } else {
             resultMap.put("result", "success");
 
-            SimpleDateFormat formatter=new SimpleDateFormat();
+            SimpleDateFormat formatter = new SimpleDateFormat();
 
-            for(BoardDTO b:list){
+            for (BoardDTO b : list) {
                 b.setFormattedEntryDate(formatter.format(b.getEntryDate()));
                 b.setFormattedModifyDate(formatter.format(b.getModifyDate()));
             }
@@ -69,9 +75,9 @@ public class BoardController {
             int startPage = pageNo - 2;
             int endPage = pageNo + 2;
 
-            if(maxPage <= 5){
-                startPage =1;
-                endPage =maxPage;
+            if (maxPage <= 5) {
+                startPage = 1;
+                endPage = maxPage;
             } else if (pageNo <= 3) {
                 startPage = 1;
                 endPage = 5;
@@ -97,7 +103,7 @@ public class BoardController {
         } else {
             resultMap.put("result", "success");
 
-            SimpleDateFormat sdf=new SimpleDateFormat(InDIV_FORMATTER);
+            SimpleDateFormat sdf = new SimpleDateFormat(InDIV_FORMATTER);
             boardDTO.setFormattedEntryDate(sdf.format(boardDTO.getEntryDate()));
             boardDTO.setFormattedModifyDate(sdf.format(boardDTO.getModifyDate()));
 
@@ -108,9 +114,17 @@ public class BoardController {
     }
 
     @PostMapping("write")
-    public Object write(@RequestBody BoardDTO boardDTO) {
-        System.out.println("인설트"+boardDTO);
+    public Object write(@RequestBody BoardDTO boardDTO, HttpServletRequest request) {
+
         Map<String, Object> resultMap = new HashMap<>();
+        String authHeader=request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        String token=authHeader.substring(7);
+
+        String username=JWT_UTIL.validateToken(token);
+        UserDTO userDTO=userService.loadByUsername(username);
+
+        boardDTO.setWriterId(userDTO.getId());
         try {
             BOARD_SERVICE.insert(boardDTO);
             resultMap.put("result", "success");

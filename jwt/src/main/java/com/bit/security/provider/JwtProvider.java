@@ -30,10 +30,14 @@
     // 컴포넌트는 우리가 직접 만든 클래스를 등록하는 차이이다.
     public class JwtProvider {
 
-        private Key key;
+        private Key key; //JWT 서명을 위한 Key 객체 선언
 
+        // 생성자를 통한 JWT 서명용 key 초기화
+        // application.property에서 secret 값 가져와서 key 에저장
         public JwtProvider(@Value("${jwt.secret}") String secret) {
+            // Base62 로 인코딩된 Secret key 디코딩
             byte[] bytes = Decoders.BASE64.decode(secret);
+            // Secret Key를 이용하여 key 객체 생성
             this.key = Keys.hmacShaKeyFor(bytes);
         }
 
