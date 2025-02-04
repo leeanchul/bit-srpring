@@ -19,8 +19,8 @@
         LIMIT ${startRow}, ${limitSize}
     </select>
     <insert id="insert" parameterType="movieDTO">
-        INSERT INTO movie(title,director,content,author)
-        VALUES (#{title}, #{director}, #{content},#{author})
+        INSERT INTO movie(title,director,content,author,file_name,file_path)
+        VALUES (#{title}, #{director}, #{content},#{author},#{fileName}, #{filePath})
     </insert>
 
     <select id="movieOne" resultType="movieDTO" parameterType="int">

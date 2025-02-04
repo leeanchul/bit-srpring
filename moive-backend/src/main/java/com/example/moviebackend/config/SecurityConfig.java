@@ -15,6 +15,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableWebSecurity
 @Configuration
@@ -28,10 +33,22 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity hs) throws Exception {
 
         hs
+                .cors(cors->cors.configurationSource(req->{
+                    // corsConfiguration 객체 생성
+                    CorsConfiguration config=new CorsConfiguration();
+                    // 프론트 로컬주소 설정
+                    config.addAllowedOrigin("http://localhost:3000");
+                    // get,post,put,delete 등 설정
+                    config.addAllowedMethod("*");
+                    // header 타입 설정
+                    config.addAllowedHeader("*");
+
+                    return config;
+                }))
                 .authorizeHttpRequests(req->
                         req
-                                .requestMatchers("/").permitAll()
-                                .anyRequest().permitAll()
+                                .requestMatchers("/api/user/**").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .httpBasic(HttpBasicConfigurer::disable)
                 .csrf(CsrfConfigurer::disable)
@@ -45,5 +62,4 @@ public class SecurityConfig {
 
                 return hs.build();
     }
-
 }
