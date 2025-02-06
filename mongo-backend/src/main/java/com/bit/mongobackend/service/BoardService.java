@@ -56,9 +56,9 @@ public class BoardService {
 public Board selectOne(int pageNo) {
     List<AggregationOperation> operations = new ArrayList<>();
 
-    //매치 연산 (match):
+    //매치 연산 (match):(where 절)
     operations.add(match(Criteria.where("_id").is(pageNo)));
-    //조인 연산 (lookup)
+    //조인 연산 (lookup) (join) 절) : 조인할 대상 , 조인할때 사용할 필드, 조인할대상에 필드, 조인 저장할 필드
     operations.add(lookup("user", "writerId", "_id", "writer"));
     // 배열로 분해
     operations.add(unwind("writer"));

@@ -61,14 +61,13 @@ public class BoardController {
         boardPage.setMaxPage(maxPage);
 
         int startPage = 1;
-        int endPage = 5;
+        int endPage;
         if (maxPage < 5) {
             endPage = maxPage;
         } else if (pageNo > maxPage - 3) {
             startPage = maxPage - 4;
             endPage = maxPage;
         } else if (pageNo <= 3) {
-            startPage = 1;
             endPage = 5;
         } else {
             startPage = pageNo - 2;
