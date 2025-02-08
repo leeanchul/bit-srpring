@@ -5,8 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class MoviePage {
-    private List<Movie> content;
+public class Page {
+    private List<?> content;
     private int currentPage;
     private int endPage;
     private int startPage;

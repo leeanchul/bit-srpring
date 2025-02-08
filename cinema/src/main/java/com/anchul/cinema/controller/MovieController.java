@@ -2,7 +2,7 @@ package com.anchul.cinema.controller;
 
 import com.anchul.cinema.jwt.JwtUtil;
 import com.anchul.cinema.model.Movie;
-import com.anchul.cinema.model.MoviePage;
+import com.anchul.cinema.model.Page;
 import com.anchul.cinema.model.User;
 import com.anchul.cinema.service.MovieService;
 import com.anchul.cinema.service.UserService;
@@ -52,13 +52,13 @@ public class MovieController {
     public ResponseEntity<?> movieAll(@PathVariable int pageNo){
         Pageable pageable = PageRequest.of(pageNo - 1, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
         Slice<Movie> temp=MOVIE_SERVICE.findAllWithUser(pageable);
-        MoviePage moviePage=new MoviePage();
-        moviePage.setContent(temp.getContent());
-        moviePage.setCurrentPage(pageNo);
+        Page page =new Page();
+        page.setContent(temp.getContent());
+        page.setCurrentPage(pageNo);
 
         int maxPage = (int) Math.ceil((double) MOVIE_SERVICE.countTotal() / PAGE_SIZE);
 
-        moviePage.setMaxPage(maxPage);
+        page.setMaxPage(maxPage);
         int startPage = 1;
         int endPage = 5;
         if (maxPage < 5) {
@@ -73,10 +73,10 @@ public class MovieController {
             startPage = pageNo - 2;
             endPage = pageNo + 2;
         }
-        moviePage.setStartPage(startPage);
-        moviePage.setEndPage(endPage);
+        page.setStartPage(startPage);
+        page.setEndPage(endPage);
 
-        return ResponseEntity.ok(moviePage);
+        return ResponseEntity.ok(page);
     }
 
     @GetMapping("movieOne/{id}")

@@ -3,16 +3,13 @@ package com.anchul.cinema.model;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
-public class Scope {
+public class Review {
     private int id;
     private int movieId;
     private int userId;
-    private double score;
-    private String userRole;
+    private String nickname;
+    private String review;
     private Date entryDate;
-    private double maxAvg;
-    private int count;
 }
