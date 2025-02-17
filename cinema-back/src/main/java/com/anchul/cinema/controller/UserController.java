@@ -3,16 +3,12 @@ package com.anchul.cinema.controller;
 import com.anchul.cinema.jwt.JwtUtil;
 import com.anchul.cinema.model.User;
 import com.anchul.cinema.service.UserService;
-
-import java.util.Collections;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+
 
 @RestController
 @RequestMapping("/api/user/")
@@ -20,13 +16,13 @@ public class UserController {
     private final JwtUtil JWT_UTIL;
     private final PasswordEncoder PASSWORD_ENCODER;
     private final UserService USER_SERVICE;
-
     public UserController(JwtUtil jwtUtil, PasswordEncoder passwordEncoder, UserService userService) {
         JWT_UTIL = jwtUtil;
         PASSWORD_ENCODER = passwordEncoder;
         USER_SERVICE = userService;
     }
 
+  
     @PostMapping("register")
     public ResponseEntity<?> register(@RequestBody User user){
         user.setRole("ROLE_USER");
@@ -46,5 +42,31 @@ public class UserController {
         String token = JWT_UTIL.createToken(origin.getUsername());
 
        return ResponseEntity.ok(token);
+    }
+    
+    @GetMapping("info")
+    public ResponseEntity<?> info(HttpServletRequest request) throws Exception{
+    	String authHeader = request.getHeader("Authorization");
+        if (authHeader == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 정보가 없음");
+        }
+        String username = JWT_UTIL.validateToken(authHeader);
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 정보가 존재 XX");
+        }
+        User login = USER_SERVICE.findByUsername(username);
+    	login.setPassword("비밀입니다.");
+    	return ResponseEntity.ok(login);
+    }
+    
+    @PostMapping("update")
+    public ResponseEntity<?> update(@RequestBody User user){
+    	System.out.println(user);
+    	if(USER_SERVICE.vaildateNickname(user.getNewNickname())) {
+    		USER_SERVICE.updateNickname(user);
+    		return ResponseEntity.ok("닉네임 변경완료");
+    	}
+    	
+    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 닉네임");
     }
 }

@@ -30,10 +30,9 @@ public class CinemaController {
         CINEMA_SERVICE = cinemaService;
     }
 
-    @GetMapping("cinemaAll")
-    public ResponseEntity<?> cinemaAll(){
-        List<Cinema> list = CINEMA_SERVICE.cinemaAll();
-        System.out.print("호출");
+    @GetMapping("cinema/{area}")
+    public ResponseEntity<?> cinema(@PathVariable String area){
+        List<Cinema> list = CINEMA_SERVICE.findAllWithUser(area);
         return ResponseEntity.ok(list);
     }
 

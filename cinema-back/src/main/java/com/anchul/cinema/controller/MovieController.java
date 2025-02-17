@@ -84,6 +84,12 @@ public class MovieController {
         Movie m = MOVIE_SERVICE.movieOne(id);
         return ResponseEntity.ok(m);
     }
+    @PostMapping("flutterInsert")
+    public ResponseEntity<?> flutterInsert(@RequestBody Movie movie){
+    
+    	Movie m = MOVIE_SERVICE.insert(movie);
+    	return ResponseEntity.ok(m);
+    }
 
     @PostMapping("insert")
     public ResponseEntity<?> insert(@ModelAttribute Movie movie,
@@ -177,6 +183,8 @@ public class MovieController {
             produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE}
     )
     public byte[] image(@PathVariable("imageName") String name) throws IOException {
+    	
+    	System.out.println(name);
         if (name == null) {
             throw new IllegalArgumentException("Image name cannot be null");
         }

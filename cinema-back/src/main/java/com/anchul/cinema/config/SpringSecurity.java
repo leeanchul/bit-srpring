@@ -33,9 +33,9 @@ public class SpringSecurity {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors->cors.configurationSource(req->{
                     CorsConfiguration config=new CorsConfiguration();
-                    config.addAllowedOrigin("http://localhost:3000");
-                    config.addAllowedOrigin("http://localhost:3001");
-                    config.addAllowedOrigin("http://localhost:54048");
+                   // config.addAllowedOrigin("http://localhost:3000");
+                   // config.addAllowedOrigin("http://localhost:3001");
+                    config.addAllowedOrigin("*");
                     config.addAllowedMethod("*");
                     config.addAllowedHeader("*");
 

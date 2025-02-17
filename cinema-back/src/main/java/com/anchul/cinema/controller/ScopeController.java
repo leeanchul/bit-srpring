@@ -26,6 +26,28 @@ public class ScopeController {
         USER_SERVICE = userService;
     }
 
+    @PostMapping("scoreUpdate")
+    public ResponseEntity<?> scoreUpdate(@RequestBody Scope scope,HttpServletRequest request) throws Exception{
+    	 String authHeader = request.getHeader("Authorization");
+         if (authHeader == null) {
+             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 정보가 없음");
+         }
+         String username = JWT_UTIL.validateToken(authHeader);
+         if (username == null) {
+             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 정보가 존재 XX");
+         }
+         User login = USER_SERVICE.findByUsername(username);
+         scope.setEntryDate(new Date());
+         
+         Scope check=SCOPE_SERVICE.selectId(scope.getId());
+         if(login.getId()==check.getUserId()) {
+        	 SCOPE_SERVICE.update(scope);
+        	 return ResponseEntity.ok("update");
+         }
+         
+    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("실패");
+    }
+    
     @PostMapping("scoreInsert")
     public ResponseEntity<?> scoreInsert(@RequestBody Scope scope, HttpServletRequest request) throws Exception {
         String authHeader = request.getHeader("Authorization");
@@ -66,4 +88,17 @@ public class ScopeController {
         return ResponseEntity.ok(result);
     }
 
+    // 영화 남긴 별점 전체 리시트
+    @GetMapping("scopeInfo/{userId}")
+    public ResponseEntity<?> scopeInfo(@PathVariable int userId){
+    	List<Scope> list=SCOPE_SERVICE.scopeInfo(userId);
+    	return ResponseEntity.ok(list);
+    }
+
+    
+    @GetMapping("delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable int id){
+    	SCOPE_SERVICE.delete(id);
+    	return ResponseEntity.ok("별점 삭제");
+    }
 }

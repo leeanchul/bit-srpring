@@ -1,18 +1,25 @@
 package com.anchul.cinema.service;
 
+import com.anchul.cinema.model.Cinema;
 import com.anchul.cinema.model.Scope;
+import com.anchul.cinema.model.Show;
 import com.anchul.cinema.repository.ScopeRepository;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.lookup;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 
 @Service
 public class ScopeService {
@@ -74,4 +81,39 @@ public class ScopeService {
         return result;
     }
 
+    
+    // info 보여줄 별점
+    public List<Scope> scopeInfo(int userId){
+    	List<AggregationOperation> operations = new ArrayList<>();
+    	operations.add(match(Criteria.where("userId").is(userId)));
+    	operations.add(lookup("movie", "movieId", "_id", "movieInfo"));
+    	operations.add(unwind("movieInfo"));
+    	 operations.add(project("id", "movieId", "score","entryDate")
+                 .and("movieInfo.title").as("title"));
+    	 Aggregation aggregation = Aggregation.newAggregation(operations);
+    	 AggregationResults<Scope> results = MONGO_TEMPLATE.aggregate(aggregation, "scope", Scope.class);
+    	 
+    	 return results.getMappedResults();
+    }
+    
+    
+    // inf 스코프 삭제
+    public void delete(int id) {
+        SCOPE_REPOSITORY.deleteById(id);
+    }
+    
+    // 업데이트 scope one
+    public Scope selectId(int id) {
+    	  Query query = new Query(Criteria.where("_id").is(id));
+    	return MONGO_TEMPLATE.findOne(query, Scope.class);
+    }
+    
+    // 업데이트
+    public void update(Scope scope) {
+    	Query query = new Query(Criteria.where("_id").is(scope.getId()));
+    	 Update update = new Update()
+    			 .set("score", scope.getScore())
+    			 .set("entryDate", scope.getEntryDate());
+    	MONGO_TEMPLATE.findAndModify(query, update, Scope.class);
+    }
 }

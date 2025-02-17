@@ -15,4 +15,6 @@ public class Scope {
     private Date entryDate;
     private double maxAvg;
     private int count;
+    
+    private String title;
 }

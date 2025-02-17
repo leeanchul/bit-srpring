@@ -36,6 +36,12 @@ public class CinemaService {
 
         return CINEMA_REPOSITORY.findAllWithUser(pageable);
     }
+    
+    // 지역 조회
+    public List<Cinema> findAllWithUser(String area){
+    	Query query=new Query(Criteria.where("area").is(area));
+        return MONGO_TEMPLATE.find(query, Cinema.class);
+    }
 
     // 입력
     public void cinemaInsert(Cinema cinema){

@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.anchul.cinema.model.Movie;
@@ -63,4 +64,19 @@ public class ShowService {
 	public void delete(int id) {
 		SHOW_REPOSITORY.deleteById(id);
 	}
+	
+	 public void showUpdate(Show show){
+	        Query query = new Query(Criteria.where("_id").is(show.getId()));
+	        Update update = new Update()
+	                .set("movieId",show.getMovieId())
+	                .set("showTime",show.getShowTime())
+	                .set("type",show.getType())
+	                .set("roomNum",show.getRoomNum())
+	                .set("age",show.getAge());
+	        MONGO_TEMPLATE.findAndModify(query, update, Show.class);
+	    }
+	 public Show showOne(int id){
+		 Query query = new Query(Criteria.where("_id").is(id));
+		 return MONGO_TEMPLATE.findOne(query,Show.class);
+	 }
 }
