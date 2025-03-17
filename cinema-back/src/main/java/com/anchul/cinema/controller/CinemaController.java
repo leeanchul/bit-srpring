@@ -5,6 +5,8 @@ import com.anchul.cinema.model.Cinema;
 import com.anchul.cinema.model.Page;
 import com.anchul.cinema.model.User;
 import com.anchul.cinema.service.CinemaService;
+import com.anchul.cinema.service.RoomsService;
+import com.anchul.cinema.service.ShowService;
 import com.anchul.cinema.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.PageRequest;
@@ -23,11 +25,16 @@ public class CinemaController {
     private final JwtUtil JWT_UTIL;
     private final UserService USER_SERVICE;
     private final CinemaService CINEMA_SERVICE;
+    private final RoomsService ROOMS_SERVICE;
+    private final ShowService SHOW_SERVICE;
+    
     private final int PAGE_SIZE = 5;
-    public CinemaController(JwtUtil jwtUtil, UserService userService, CinemaService cinemaService) {
+    public CinemaController(JwtUtil jwtUtil, UserService userService, CinemaService cinemaService,RoomsService roomsService,ShowService showService) {
         JWT_UTIL = jwtUtil;
         USER_SERVICE = userService;
         CINEMA_SERVICE = cinemaService;
+        ROOMS_SERVICE=roomsService;
+        SHOW_SERVICE=showService;
     }
 
     @GetMapping("cinema/{area}")
@@ -35,7 +42,8 @@ public class CinemaController {
         List<Cinema> list = CINEMA_SERVICE.findAllWithUser(area);
         return ResponseEntity.ok(list);
     }
-
+    
+    
     @GetMapping("cinemaAll/{pageNo}")
     public ResponseEntity<?> cinemaAll(@PathVariable int pageNo){
 
@@ -85,7 +93,14 @@ public class CinemaController {
         User login = USER_SERVICE.findByUsername(username);
 
         if(login.getRole().equals("ROLE_MASTER")){
+        	// 상영관 삭제
             CINEMA_SERVICE.deleteById(id);
+            // 상영관, 상영영화 삭제
+            SHOW_SERVICE.ParentDelete(id);
+            // 상영관 정보 삭제
+            ROOMS_SERVICE.ParentDelete(id);
+            // seat 정보도 삭제해야함
+            
             return ResponseEntity.ok("삭제");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("관리자가 아닙니다.");

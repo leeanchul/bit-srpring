@@ -102,4 +102,24 @@ public class ReviewController {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("리뷰 작성 실패");
     }
+    
+    @GetMapping("userReview/{userId}")
+    public ResponseEntity<?> userReview(@PathVariable int userId,HttpServletRequest request) throws Exception{
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 정보가 없음");
+        }
+        String username = JWT_UTIL.validateToken(authHeader);
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 정보가 존재 XX");
+        }
+        User login = USER_SERVICE.findByUsername(username);
+
+        if(!login.getRole().equals("ROLE_USER")) {
+        	 List<Review> result= REVIEW_SERVICE.userReview(userId);
+        	 return ResponseEntity.ok(result);
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("리뷰 작성 실패");
+    }
 }

@@ -32,7 +32,25 @@ public class ReviewService {
         MONGO_TEMPLATE = mongoTemplate;
     }
 
+    // user의 모든 리뷰
+    public List<Review> userReview(int userId){
+    	 List<AggregationOperation> operations = new ArrayList<>();
+    	 operations.add(match(Criteria.where("userId").is(userId)));
+    	 operations.add(lookup("user", "userId", "_id", "writer"));
+    	 operations.add(lookup("movie", "movieId", "_id", "movie"));
+         // 배열로 분해하기
+         operations.add(unwind("writer"));
+         operations.add(unwind("movie"));
+         // prject 연산
+         operations.add(project("id", "movieId", "review", "entryDate")
+                 .and("writer.nickname").as("nickname").and("movie.title").as("title"));
+         Aggregation aggregation = Aggregation.newAggregation(operations);
+         AggregationResults<Review> results = MONGO_TEMPLATE.aggregate(aggregation, "review", Review.class);
 
+         return results.getMappedResults();
+    }
+    
+    // 각 영화의 리뷰들
     public List<Review> reviewAll(int movieId) {
         List<AggregationOperation> operations = new ArrayList<>();
         operations.add(match(Criteria.where("movieId").is(movieId)));

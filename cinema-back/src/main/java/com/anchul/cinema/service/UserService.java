@@ -4,6 +4,8 @@ import com.anchul.cinema.model.Movie;
 import com.anchul.cinema.model.User;
 import com.anchul.cinema.repository.UserRepository;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -38,11 +40,30 @@ public class UserService {
     	return MONGO_TEMPLATE.findOne(query, User.class) == null;
     }
     
+    // 업데이트 닉네임
     public void updateNickname(User user) {
     	Query query=new Query(Criteria.where("_id").is(user.getId()));
     	Update update = new Update()
     			.set("nickname",user.getNewNickname());
     	
     	 MONGO_TEMPLATE.findAndModify(query, update, User.class);
+    }
+    // 업데이트 비번
+    public void updatePwd(User user) {
+    	Query query=new Query(Criteria.where("_id").is(user.getId()));
+    	Update update=new Update()
+    			.set("password", user.getNewPassword());
+    	
+    	MONGO_TEMPLATE.findAndModify(query, update, User.class);
+    }
+    
+    // user 전체 조회
+    public List<User> userAll(){
+    	List<User> result=USER_REPOSITORY.findAll();
+    	
+    	for(User u: result) {
+    		u.setPassword("비밀입니다.");
+    	}
+    	return result;
     }
 }

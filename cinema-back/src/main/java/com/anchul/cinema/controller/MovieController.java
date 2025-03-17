@@ -184,7 +184,7 @@ public class MovieController {
     )
     public byte[] image(@PathVariable("imageName") String name) throws IOException {
     	
-    	System.out.println(name);
+   
         if (name == null) {
             throw new IllegalArgumentException("Image name cannot be null");
         }

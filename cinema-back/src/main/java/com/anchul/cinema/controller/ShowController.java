@@ -37,8 +37,16 @@ public class ShowController {
 	  @GetMapping("showAll/{id}")
 	  public ResponseEntity<?> showAll(@PathVariable int id){
 		  List<Show> result =SHOW_SERVICE.showAll(id);
+
 		  return ResponseEntity.ok(result);
 	  }
+	  
+	  @GetMapping("showAll")
+	  public ResponseEntity<?> showAll(){
+		  List<Show> result=SHOW_SERVICE.showAll();
+		  return ResponseEntity.ok(result);
+	  }
+	  
 	  
 	  @PostMapping("insert")
 	  public ResponseEntity<?> insert(@RequestBody Show show,HttpServletRequest request) throws Exception{
@@ -51,8 +59,6 @@ public class ShowController {
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 정보가 존재 XX");
 	        }
 	        User login = USER_SERVICE.findByUsername(username);
-	        
-	        
 	        
 	        if(login.getRole().equals("ROLE_MASTER")&&SHOW_SERVICE.validate(show)) {
 	        	SHOW_SERVICE.insert(show);

@@ -11,7 +11,6 @@ public class Show {
 	private int cinemaId;
 	private int showTime;
 	private String type;
-	private String roomNum;
 	private String age;
 	
 	private String title;

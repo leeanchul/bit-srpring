@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.anchul.cinema.model.Movie;
 import com.anchul.cinema.model.Review;
+import com.anchul.cinema.model.Rooms;
 import com.anchul.cinema.model.Show;
 import com.anchul.cinema.repository.CinemaRepository;
 import com.anchul.cinema.repository.ShowRepository;
@@ -37,12 +38,24 @@ public class ShowService {
         MONGO_TEMPLATE = mongoTemplate;
     }
     
+    public List<Show> showAll(){
+    	List<AggregationOperation> operations = new ArrayList<>();
+    	 operations.add(lookup("movie", "movieId", "_id", "movieInfo"));
+    	 operations.add(unwind("movieInfo"));
+    	 operations.add(project("id", "movieId", "showTime", "type","age","cinemaId")
+                 .and("movieInfo.title").as("title").and("movieInfo.filePath").as("filePath"));
+    	 Aggregation aggregation = Aggregation.newAggregation(operations);
+    	 AggregationResults<Show> results = MONGO_TEMPLATE.aggregate(aggregation, "show", Show.class);
+
+         return results.getMappedResults();
+    }
+    
     public List<Show> showAll(int id) {
     	List<AggregationOperation> operations = new ArrayList<>();
     	 operations.add(match(Criteria.where("cinemaId").is(id)));
     	 operations.add(lookup("movie", "movieId", "_id", "movieInfo"));
     	 operations.add(unwind("movieInfo"));
-    	 operations.add(project("id", "movieId", "showTime", "type","roomNum","age")
+    	 operations.add(project("id", "movieId", "showTime", "type","age","cinemaId")
                  .and("movieInfo.title").as("title").and("movieInfo.filePath").as("filePath"));
     	 Aggregation aggregation = Aggregation.newAggregation(operations);
     	 AggregationResults<Show> results = MONGO_TEMPLATE.aggregate(aggregation, "show", Show.class);
@@ -65,13 +78,18 @@ public class ShowService {
 		SHOW_REPOSITORY.deleteById(id);
 	}
 	
+	   public void ParentDelete(int cinemaId) {
+		    Query query = new Query(Criteria.where("cinemaId").is(cinemaId));
+
+		  MONGO_TEMPLATE.remove(query, Show.class);
+		   
+		}
 	 public void showUpdate(Show show){
 	        Query query = new Query(Criteria.where("_id").is(show.getId()));
 	        Update update = new Update()
 	                .set("movieId",show.getMovieId())
 	                .set("showTime",show.getShowTime())
 	                .set("type",show.getType())
-	                .set("roomNum",show.getRoomNum())
 	                .set("age",show.getAge());
 	        MONGO_TEMPLATE.findAndModify(query, update, Show.class);
 	    }

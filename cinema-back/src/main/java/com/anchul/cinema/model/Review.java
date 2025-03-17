@@ -12,4 +12,5 @@ public class Review {
     private String nickname;
     private String review;
     private Date entryDate;
+    private String title;
 }

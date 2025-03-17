@@ -6,11 +6,16 @@ import com.anchul.cinema.repository.CinemaRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
